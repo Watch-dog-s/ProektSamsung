@@ -4,9 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -31,6 +35,8 @@ fun Marks_Screen_prev(){
     Marks_Screen(navController = rememberNavController())
 }
 
+
+
 enum class Type { HomeWork, Answer, Test, MegaTEst }
 
 data class MarkData(
@@ -43,40 +49,57 @@ data class MarkData(
 
 )
 
+
+
 @Composable
 fun Marks_Screen(navController: NavHostController) {
-    val allMarksBySubject = remember  { mutableStateListOf<MarkData>() }
+    val allMarksBySubject = remember { mutableStateListOf<MarkData>() }
 
-    var n = Notification(A.Good, B.Mark)
-    var t = Type.Answer
-    var mark1 = MarkData(n, 5, t, "Отлично", "Иванов", "Математика")
+    val n = Notification(A.Good, B.Mark)
 
-    allMarksBySubject.add(mark1)
-    allMarksBySubject.add(mark1)
-    allMarksBySubject.add(mark1)
-    allMarksBySubject.add(mark1)
-    allMarksBySubject.add(mark1)
+    val Allmarks = listOf(
+        MarkData(n, 5, Type.Answer, "Отлично", "Путуридзе", "Математика"),
+        MarkData(n, 4, Type.Test, "Хорошо", "Сидоров", "Математика"),
+        MarkData(n, 3, Type.HomeWork, "Удовлетворительно", "Иванова", "Линал"),
+        MarkData(n, 5, Type.MegaTEst, "Супер", "Петров", "Линал")
+    )
 
-    var AllSubject= listOf("Матан","Линал")
-
+    allMarksBySubject.addAll(Allmarks)
 
     val grouped = allMarksBySubject.groupBy { it.Subject }
+    val subjects = grouped.keys.toList()
 
+    Row(Modifier.fillMaxSize()) {
+        // Левая колонка с названиями предметов
+        LazyColumn(
+            modifier = Modifier
+                .width(100.dp)
+                .fillMaxHeight()
+        ) {
+            items(subjects) { subject ->
+                Text(
+                    text = subject,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .height(100.dp), // выравнивание по строке справа
+                    fontSize = 14.sp
+                )
+            }
+        }
 
-
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(AllSubject) { subject ->
-
-            Text(
-                text = subject,
-                modifier = Modifier.padding(8.dp)
-            )
-
-            FullMarkCard(grouped[subject] ?: emptyList())
-
+        // Правая колонка с оценками
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 8.dp)
+        ) {
+            items(subjects) { subject ->
+                FullMarkCard(grouped[subject] ?: emptyList())
+            }
         }
     }
 }
+
 
 
 
