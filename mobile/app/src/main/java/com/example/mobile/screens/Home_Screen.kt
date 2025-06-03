@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.mobile.R
 
 
 @Preview
@@ -73,14 +74,13 @@ fun Home_Screen(navController: NavHostController) {
                                 .fillMaxSize()
                                 .background(Color.LightGray)
                                 .padding(top = 3.dp),
-                            contentScale = ContentScale.Crop // как я понля этот параметр отвечает за масштабируемость
-                        )
+                            contentScale = ContentScale.Crop )
 
                     }
                 }
             }
 
-            val n=Notification(A.Good,B.Mark)  //Вообще это будем из вью модели получать но пока так
+            val n=Notification(A.Good,B.Mark)
 
             notification(n)
             notification(n)
@@ -114,6 +114,5 @@ fun notification(n:Notification){
             Text(text = "Вы получили новую оценку")
         }
     }
-
 }
 

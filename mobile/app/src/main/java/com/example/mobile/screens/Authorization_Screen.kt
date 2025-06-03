@@ -1,97 +1,71 @@
 package com.example.mobile.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.mobile.navigation.Routes
+import com.example.myapplication.Ktor.Login
+import com.example.myapplication.ViewModels.LoginViewModel
 
 
+@SuppressLint("ViewModelConstructorInComposable")
 @Preview
 @Composable
 fun Authorization_prev(){
-
-    Authorization_Screen(navController = rememberNavController())
+    val loginViewModel=LoginViewModel()
+    Authorization_Screen(navController = rememberNavController(),loginViewModel)
 }
 
 
 @Composable
-fun Authorization_Screen(navController: NavHostController) {
+fun Authorization_Screen(navController: NavHostController,loginViewModel: LoginViewModel) {
+    val loginAPI = remember { Login() }
+    val loginSuccess by loginViewModel.success.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxHeight()
-            .fillMaxWidth())
 
+    LaunchedEffect(loginSuccess) {
+        if (loginSuccess) {
+            navController.navigate(Routes.HOME)
+        }
+    }
+
+    Column(modifier = Modifier.fillMaxSize())
     {
-
-        Spacer(modifier = Modifier.height(300.dp))
-
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-        {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row { TextField(value = "Введите логин", onValueChange = {}) }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(50.dp))
+        Text(text="Вход")
 
 
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-        {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row { TextField(value = "Введите пароль", onValueChange = {}) }
-            }
-        }
+        Spacer(modifier=Modifier.padding(60.dp))
+        TextField(value = loginAPI.login, onValueChange = {newLogin->loginAPI.onLoginChange(newLogin)}, label = {"Логин"})
+        Spacer(modifier=Modifier.padding(20.dp))
+        TextField(value = loginAPI.password, onValueChange = {newPassword->loginAPI.onPasswordChange(newPassword)}, label = {"Пароль"})
 
 
-        Spacer(modifier = Modifier.height(50.dp))
-
-
-        // войти
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-        {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Button(onClick ={ navController.navigate("To_Home") }) { Text(text = "Войти") }
-            }
-        }
-
-
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier=Modifier.padding(20.dp))
+        Button(onClick = { loginAPI.onLoginButtonClick(loginViewModel) }){Text(text="Войти")}
 
 
 
     }
+
 }

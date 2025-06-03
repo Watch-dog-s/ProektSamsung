@@ -14,15 +14,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.mobile.screens.MainScreen
 import com.example.mobile.ui.theme.MobileTheme
+import com.example.myapplication.ViewModels.LoginViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val loginViewModel=LoginViewModel()
         setContent {
             MobileTheme {
                 val navController = rememberNavController()
-                MainScreen(navController)
+                MainScreen(navController,loginViewModel)
             }
             }
         }

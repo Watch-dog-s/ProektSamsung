@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    kotlin("plugin.serialization") version "1.9.20"
 }
 
 android {
@@ -40,6 +41,24 @@ android {
 }
 
 dependencies {
+
+
+
+    val ktor_version="3.1.3"
+    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-client-cio:$ktor_version")
+    implementation("io.ktor:ktor-client-android:$ktor_version")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+    implementation("io.ktor:ktor-client-okhttp:$ktor_version")
+
+    val nav_version = "2.9.0"
+
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+
+
 
     implementation(libs.retrofit)
     implementation(libs.converter.gson)

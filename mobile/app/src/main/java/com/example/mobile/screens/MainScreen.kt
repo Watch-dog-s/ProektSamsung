@@ -12,10 +12,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.mobile.Bar.BottomBar
 import com.example.mobile.navigation.Routes
 import com.example.mobile.navigation.navigation
+import com.example.myapplication.ViewModels.LoginViewModel
 
 
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun MainScreen(navController: NavHostController,loginViewModel: LoginViewModel) {
     val currentRoute = currentRoute(navController)
 
     // Список экранов с BottomBarом
@@ -35,7 +36,7 @@ fun MainScreen(navController: NavHostController) {
     ) { innerPadding ->
         // Тут мы учитываем отступы (например, из-за BottomBar) и рендерим навигацию
         Box(modifier = Modifier.padding(innerPadding)) {
-            navigation(navController)
+            navigation(navController,loginViewModel)
         }
     }
 }
