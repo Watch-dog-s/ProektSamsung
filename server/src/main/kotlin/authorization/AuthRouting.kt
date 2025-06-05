@@ -13,7 +13,7 @@ import java.util.*
 
 
 class LoginRouting(
-    private val userDao: UserDaoImpl
+    private val userDao: UserDao
 ) {
     fun Route.configureLoginRouting() {
         post("/login") {
@@ -31,7 +31,13 @@ class LoginRouting(
             }
 
             val token = UUID.randomUUID().toString()
-            call.respond(LoginResponseRemote(token = token))
+            call.respond(
+                LoginResponseRemote(
+                    token = token,
+                    userId = user.id,
+                    groupId = user.groupId
+                )
+            )
         }
     }
 }

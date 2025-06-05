@@ -3,14 +3,22 @@ package com.example.authorization
 import kotlinx.serialization.Serializable
 
 
+
+
+
+
+
+
 @Serializable
 data class LoginReceiveRemote(
-    val login : String,
-    val password : String,
-
+    val login: String,
+    val password: String
 )
+
 
 @Serializable
 data class LoginResponseRemote(
-    val token : String
+    val token: String,
+    val userId: Int,
+    val groupId: Int
 )

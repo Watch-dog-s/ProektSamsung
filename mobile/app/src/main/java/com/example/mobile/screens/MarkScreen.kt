@@ -28,15 +28,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
 
-
-@Preview
-@Composable
-fun Marks_Screen_prev(){
-    Marks_Screen(navController = rememberNavController())
-}
-
-
-
 enum class Type { HomeWork, Answer, Test, ControlWork }
 
 data class MarkData(
@@ -52,76 +43,45 @@ data class MarkData(
 
 
 @Composable
-fun Marks_Screen(navController: NavHostController) {
-    val allMarksBySubject = remember { mutableStateListOf<MarkData>() }
+fun Marks_Screen( navController: NavHostController, viewModel: MarksViewModel ) {
 
-    val n = Notification(A.Good, B.Mark)
 
-    val Allmarks = listOf(
-        MarkData(n, 5, Type.Answer, "Отлично", "Путуридзе", "Математика"),
-        MarkData(n, 4, Type.Test, "Хорошо", "Сидоров", "Математика"),
-        MarkData(n, 3, Type.HomeWork, "Удовлетворительно", "Иванова", "Линал"),
-        MarkData(n, 5, Type.ControlWork, "Супер", "Петров", "Линал")
-    )
+    val grouped = allMarks.groupBy { it.subject }
 
-    allMarksBySubject.addAll(Allmarks)
-
-    val grouped = allMarksBySubject.groupBy { it.Subject }
-    val subjects = grouped.keys.toList()
-
-    Row(Modifier.fillMaxSize()) {
-        // Левая колонка с названиями предметов
-        LazyColumn(
-            modifier = Modifier
-                .width(100.dp)
-                .fillMaxHeight()
-        ) {
-            items(subjects) { subject ->
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+    ) {
+        grouped.forEach { (subject, marks) ->
+            item {
                 Text(
                     text = subject,
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .height(100.dp), // выравнивание по строке справа
-                    fontSize = 14.sp
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(vertical = 8.dp)
                 )
-            }
-        }
-
-        // Правая колонка с оценками
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 8.dp)
-        ) {
-            items(subjects) { subject ->
-                FullMarkCard(grouped[subject] ?: emptyList())
+                FullMarkCard(marks)
             }
         }
     }
 }
-
-
-
 
 @Composable
 fun FullMarkCard(marks: List<MarkData>) {
     LazyRow(modifier = Modifier.padding(start = 8.dp, bottom = 16.dp)) {
         items(marks) { mark ->
-            Mark(mark)
+            MarkCard(mark)
         }
     }
 }
 
-
-
 @Composable
-fun Mark(markData: MarkData) {
+fun MarkCard(markData: MarkData) {
     Card(
         modifier = Modifier
             .size(width = 60.dp, height = 80.dp)
             .padding(4.dp)
-            .clickable(onClick = {})
-            .background(Color.Red)
+            .clickable { /* TODO: navigate or show detail */ }
     ) {
         Column(
             modifier = Modifier.padding(8.dp),
@@ -132,3 +92,4 @@ fun Mark(markData: MarkData) {
         }
     }
 }
+

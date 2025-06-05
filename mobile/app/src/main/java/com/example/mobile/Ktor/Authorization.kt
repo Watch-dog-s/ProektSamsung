@@ -27,7 +27,10 @@ data class LoginRequest(
 
 @kotlinx.serialization.Serializable
 data class LoginResponse(
-    val token : String
+    val token : String,
+    val id : Int,
+    val group_id : Int
+
 )
 
 
