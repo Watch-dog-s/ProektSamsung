@@ -6,8 +6,11 @@ import org.jetbrains.exposed.sql.Database
 
 object DatabaseConfiguration
 {
+    lateinit var db: Database
+        private set
+
     fun init(){
-        Database.connect(
+        db= Database.connect(
             url="jdbc:postgresql://localhost:5432/Samsung",
             driver="org.postgresql.Driver",
             user = "postgres",

@@ -24,10 +24,13 @@ fun Shedule_Screen_Prev(){
     Shedule_Screen(navController = rememberNavController())
 }
 
+
+
+
+
 @Composable
 fun Shedule_Screen(navController: NavHostController){
     Column (modifier = Modifier.fillMaxSize()) {
-        //для примера
         Subject("Математика", "Г-207", 100, "Иванов Иван Иванович", "9:00-10:30")
         Spacer(modifier = Modifier.padding(10.dp))
         chillTime("10 минут")

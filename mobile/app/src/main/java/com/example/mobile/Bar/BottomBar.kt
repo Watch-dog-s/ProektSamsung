@@ -34,13 +34,17 @@ fun BottomBar(navController: NavController) {
                         modifier = Modifier.size(60.dp)
                     )
                 }
-                IconButton(onClick = { navController.navigate(Routes.MARKS) }) {
+
+
+
+                IconButton(onClick = {navController.navigate(Routes.MARKS) }) {
                     Icon(
                         painter = painterResource(id = R.drawable.analysis),
                         contentDescription = "",
-                        modifier = Modifier.size(30.dp)
+                        modifier = Modifier.size(60.dp)
                     )
                 }
+
                 IconButton(onClick = { navController.navigate(Routes.HOME) }) {
                     Icon(
                         painter = painterResource(id = R.drawable.home),

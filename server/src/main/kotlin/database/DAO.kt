@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 interface UserDao{
     fun getUserByEmail (login: String): user?
-    fun createUser (login: String, password: String, type:String): user
+    fun createUser (login: String, password: String): user
 }
 
 
@@ -31,7 +31,7 @@ class UserDaoImpl : UserDao {
 
 
 
-    override fun createUser(login: String, password: String,type:String): user {
+    override fun createUser(login: String, password: String): user {
         return transaction {
             val id = users.insert {
                 it[users.login] = login

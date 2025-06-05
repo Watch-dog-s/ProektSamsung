@@ -11,31 +11,27 @@ import io.ktor.http.*
 import io.ktor.server.request.*
 import java.util.*
 
+
 class LoginRouting(
     private val userDao: UserDaoImpl
 ) {
-    fun Application.configureLoginRouting() {
+    fun Route.configureLoginRouting() {
+        post("/login") {
+            val receive = call.receive<LoginReceiveRemote>()
+            val user = userDao.getUserByEmail(receive.login)
 
-        LoginRouting(userDao)
-
-        routing {
-            post("/login") {
-                val receive = call.receive<LoginReceiveRemote>()
-                val user = userDao.getUserByEmail(receive.login)
-
-                if (user == null) {
-                    call.respond(HttpStatusCode.Unauthorized, "Юзер не найден")
-                    return@post
-                }
-
-                if (user.password != receive.password) {
-                    call.respond(HttpStatusCode.Unauthorized, "Неправильный пароль")
-                    return@post
-                }
-
-                val token = UUID.randomUUID().toString()
-                call.respond(LoginResponseRemote(token = token))
+            if (user == null) {
+                call.respond(HttpStatusCode.Unauthorized, "Юзер не найден")
+                return@post
             }
+
+            if (user.password != receive.password) {
+                call.respond(HttpStatusCode.Unauthorized, "Неправильный пароль")
+                return@post
+            }
+
+            val token = UUID.randomUUID().toString()
+            call.respond(LoginResponseRemote(token = token))
         }
     }
 }

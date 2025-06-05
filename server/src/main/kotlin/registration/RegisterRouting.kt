@@ -12,33 +12,34 @@ import java.util.*
 
 
 
+
+
 class RegisterRouting(
     private val userDao: UserDaoImpl
 ) {
-    fun Application.configureRegisterRouting() {
-        routing {
-            post("/register") {
+    fun Route.configureRegisterRouting() {
+        post("/register") {
+            val receive = call.receive<RegisterReceiveRemote>()
 
-                val receive = call.receive<RegisterReceiveRemote>()
+            if (userDao.getUserByEmail(receive.login) != null) {
+                call.respond(HttpStatusCode.Conflict, "Логин уже зарегистрирован")
+                return@post
+            }
 
-                if (userDao.getUserByEmail(receive.login)!= null){
-                    return@post call.respond(HttpStatusCode.Conflict,"Логин уже зарегестрирован")
-                }
+            try {
+                val user = userDao.createUser(
+                    login = receive.login,
+                    password = receive.password
+                )
 
-                try{
-                    val user = userDao.createUser(receive.login,receive.password,receive.type)
+                val token = UUID.randomUUID().toString()
+                call.respond(RegisterResponseRemote(token))
 
-                    val token = UUID.randomUUID().toString()
-
-                    call.respond(RegisterResponseRemote(token))
-                }
-                catch(e : Exception){
-                    call.respond(
-                        HttpStatusCode.InternalServerError,
-                        "Ошибка регистрации: ${e.localizedMessage}"
-                    )
-                }
-
+            } catch (e: Exception) {
+                call.respond(
+                    HttpStatusCode.InternalServerError,
+                    "Ошибка регистрации: ${e.localizedMessage}"
+                )
             }
         }
     }

@@ -37,7 +37,7 @@ fun Marks_Screen_prev(){
 
 
 
-enum class Type { HomeWork, Answer, Test, MegaTEst }
+enum class Type { HomeWork, Answer, Test, ControlWork }
 
 data class MarkData(
     var a:Notification,
@@ -61,7 +61,7 @@ fun Marks_Screen(navController: NavHostController) {
         MarkData(n, 5, Type.Answer, "Отлично", "Путуридзе", "Математика"),
         MarkData(n, 4, Type.Test, "Хорошо", "Сидоров", "Математика"),
         MarkData(n, 3, Type.HomeWork, "Удовлетворительно", "Иванова", "Линал"),
-        MarkData(n, 5, Type.MegaTEst, "Супер", "Петров", "Линал")
+        MarkData(n, 5, Type.ControlWork, "Супер", "Петров", "Линал")
     )
 
     allMarksBySubject.addAll(Allmarks)
