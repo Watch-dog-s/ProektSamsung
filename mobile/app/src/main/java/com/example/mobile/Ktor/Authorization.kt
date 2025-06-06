@@ -45,8 +45,8 @@ data class LoginResponse(
 
 class Login {
 
-    var login by mutableStateOf("2")
-    var password by mutableStateOf("2")
+    var login by mutableStateOf("")
+    var password by mutableStateOf("")
 
     fun onPasswordChange(newPassword: String) {
         password = newPassword
