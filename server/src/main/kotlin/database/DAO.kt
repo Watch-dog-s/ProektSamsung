@@ -21,7 +21,8 @@ class UserDaoImpl : UserDao {
                 login = it[users.login],
                 studentId = it[users.studentId],
                 groupId = it[students.groupId],
-                password = it[users.password]
+                password = it[users.password],
+                type=it[users.type]
             )
         }.singleOrNull()
     }

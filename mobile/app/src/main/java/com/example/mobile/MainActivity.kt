@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.example.mobile.ViewModels.StudentViewModel
 import com.example.mobile.screens.MainScreen
 import com.example.mobile.ui.theme.MobileTheme
 import com.example.myapplication.ViewModels.LoginViewModel
@@ -21,10 +22,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val loginViewModel=LoginViewModel()
+        val studentViewModel=StudentViewModel()
         setContent {
             MobileTheme {
                 val navController = rememberNavController()
-                MainScreen(navController,loginViewModel)
+                MainScreen(navController,loginViewModel,studentViewModel)
             }
             }
         }

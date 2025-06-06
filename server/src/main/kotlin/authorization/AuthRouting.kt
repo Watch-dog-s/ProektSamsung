@@ -34,8 +34,9 @@ class LoginRouting(
             call.respond(
                 LoginResponseRemote(
                     token = token,
-                    userId = user.id,
-                    groupId = user.groupId
+                    studentId = user.studentId,
+                    groupId = user.groupId,
+                    type=user.type
                 )
             )
         }

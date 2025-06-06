@@ -1,5 +1,6 @@
 package com.example.mobile.ViewModels
 
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,18 +10,18 @@ import androidx.lifecycle.ViewModel
 
 
 class StudentViewModel : ViewModel() {
+    private val _userId = mutableStateOf<Int?>(null)
+    val userId: State<Int?> = _userId
 
-    var marks by mutableStateOf<List<MarkResponse>>(emptyList())
-        private set
+    private val _groupId = mutableStateOf<Int?>(null)
+    val groupId: State<Int?> = _groupId
 
-    var error by mutableStateOf<String?>(null)
-        private set
+    private val _type = mutableStateOf<String?>(null)
+    val type: State<String?> = _type
 
-    fun setMarks(newMarks: List<MarkResponse>) {
-        marks = newMarks
-    }
-
-    fun setError(message: String) {
-        error = message
+    fun saveUserInfo(id: Int, groupId: Int, type: String) {
+        _userId.value = id
+        _groupId.value = groupId
+        _type.value = type
     }
 }

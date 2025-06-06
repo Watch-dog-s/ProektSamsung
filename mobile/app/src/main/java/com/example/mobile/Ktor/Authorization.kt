@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewModelScope
+import com.example.mobile.ViewModels.StudentViewModel
 import com.example.myapplication.ViewModels.LoginViewModel
 
 import io.ktor.client.call.body
@@ -15,6 +17,7 @@ import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 
@@ -25,71 +28,78 @@ data class LoginRequest(
     val password : String
 )
 
+
+
 @kotlinx.serialization.Serializable
 data class LoginResponse(
     val token : String,
+    @SerialName("studentId")
     val id : Int,
-    val group_id : Int
+    @SerialName("groupId")
+    val group_id : Int,
+    val type: String
 
 )
 
 
 
-class Login()
-{
+class Login {
 
-    var login by mutableStateOf("")
-    var password by mutableStateOf("")
+    var login by mutableStateOf("2")
+    var password by mutableStateOf("2")
 
-    fun onPasswordChange(newPassword : String)
-    {
+    fun onPasswordChange(newPassword: String) {
         password = newPassword
         println(password)
     }
 
-
-    fun onLoginChange(NLoggin:String){
-        login=NLoggin
+    fun onLoginChange(NLoggin: String) {
+        login = NLoggin
         println(login)
     }
 
-    fun onLoginButtonClick( reg1: LoginViewModel){
-
+    fun onLoginButtonClick(reg1: LoginViewModel, studentViewModel: StudentViewModel) {
         val request = LoginRequest(login, password)
 
-        GlobalScope.launch {
+        reg1.viewModelScope.launch {
             val result = LoginRequest(request)
 
-            result.onSuccess { token -> Log.i("requestAnswer" , token);  reg1.changeTrue()}.onFailure { error -> println(error.message);reg1.changeFalse() }
-            Log.d("ViewModel",reg1.success.value.toString())
+            result.onSuccess { loginResponse ->
+                Log.i("requestAnswer", loginResponse.token)
+                reg1.changeTrue()
+                studentViewModel.saveUserInfo(
+                    id = loginResponse.id,
+                    groupId = loginResponse.group_id,
+                    type = loginResponse.type
+                )
+            }.onFailure { error ->
+                println(error.message)
+                reg1.changeFalse()
+            }
 
+            Log.d("ViewModel", reg1.success.value.toString())
         }
     }
 
-    suspend fun LoginRequest(request: LoginRequest) : Result<String>
-
-
-    {
-        val response = KtorClient.instance.post("http://10.0.2.2:8080/login"){
-            contentType(ContentType.Application.Json)
-            setBody(request)
-        }
-
-        return if (response.status.isSuccess()) {
-            try{
-
-                val LoginResponse = response.body<LoginResponse>()
-                println(LoginResponse.token)
-                Result.success(LoginResponse.token)
+    suspend fun LoginRequest(request: LoginRequest): Result<LoginResponse> {
+        return try {
+            val response = KtorClient.instance.post("http://10.0.2.2:8080/login") {
+                contentType(ContentType.Application.Json)
+                setBody(request)
             }
-            catch(e : SerializationException)
-            {
-                Result.failure(Exception("whfwhjfhwwjf"))
+
+            if (response.status.isSuccess()) {
+                val loginResponse = response.body<LoginResponse>()
+                println(loginResponse.token)
+                Result.success(loginResponse)
+            } else {
+                Result.failure(Exception(response.bodyAsText()))
             }
-        }
-        else
-        {
-            Result.failure(Exception(response.bodyAsText()))
+
+        } catch (e: SerializationException) {
+            Result.failure(Exception("Ошибка сериализации"))
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 }

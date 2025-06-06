@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.mobile.ViewModels.StudentViewModel
 import com.example.mobile.navigation.Routes
 import com.example.myapplication.Ktor.Login
 import com.example.myapplication.ViewModels.LoginViewModel
@@ -34,13 +35,14 @@ import com.example.myapplication.ViewModels.LoginViewModel
 @Composable
 fun Authorization_prev(){
     val loginViewModel=LoginViewModel()
-    Authorization_Screen(navController = rememberNavController(),loginViewModel)
+  //  Authorization_Screen(navController = rememberNavController(),loginViewModel)
 }
 
 
 @Composable
-fun Authorization_Screen(navController: NavHostController,loginViewModel: LoginViewModel) {
+fun Authorization_Screen(navController: NavHostController,loginViewModel: LoginViewModel,studentViewModel: StudentViewModel) {
     val loginAPI = remember { Login() }
+
     val loginSuccess by loginViewModel.success.collectAsState()
 
 
@@ -62,7 +64,7 @@ fun Authorization_Screen(navController: NavHostController,loginViewModel: LoginV
 
 
         Spacer(modifier=Modifier.padding(20.dp))
-        Button(onClick = { loginAPI.onLoginButtonClick(loginViewModel) }){Text(text="Войти")}
+        Button(onClick = { loginAPI.onLoginButtonClick(loginViewModel,studentViewModel) }){Text(text="Войти")}
 
 
 
