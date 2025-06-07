@@ -37,20 +37,7 @@ fun Route.markRouting(markDao: MarkDaoImpl) {
             return@get
         }
 
-        val studentMarks = transaction(db) {
-            marks.select { marks.studentId eq studentId }
-                .map {
-                    MarkResponse(
-                        id = it[marks.id],
-                        studentId = it[marks.studentId],
-                        subject = it[marks.subject],
-                        mark = it[marks.mark],
-                        comment = it[marks.comment],
-                        teacher = it[marks.teacher],
-                        type = it[marks.type].name
-                    )
-                }
-        }
+        val studentMarks = markDao.getMarksByStudentId(studentId)
 
         if (studentMarks.isEmpty()) {
             call.respond(HttpStatusCode.NotFound, "У школьника нет оценок")
@@ -58,6 +45,7 @@ fun Route.markRouting(markDao: MarkDaoImpl) {
             call.respond(HttpStatusCode.OK, studentMarks)
         }
     }
+
 
 
 }
